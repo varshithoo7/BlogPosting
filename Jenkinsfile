@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         MYSQL_PASSWORD = credentials('MYSQL_PASSWORD')
+	FLASK_SECRET_KEY = credentials('FLASK_SECRET_KEY')
     }
 
     stages {
