@@ -19,7 +19,7 @@ pipeline {
         }
         stage('Unit Testing') {
             steps {
-                sh 'pytest'
+                sh 'source venv/bin/activate && pytest'
             }
         }
         stage('Static Code Analysis - Bandit') {
