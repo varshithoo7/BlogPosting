@@ -9,6 +9,7 @@ pipeline {
         }
         stage('Linting') {
             steps {
+		sh 'which flake8'
                 sh 'flake8 .'
             }
         }
