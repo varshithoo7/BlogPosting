@@ -23,7 +23,21 @@ pipeline {
         }
         stage('Unit Testing') {
             steps {
-                sh '~/.local/bin/pytest'
+               script {
+                    def banditOutput = sh(script: '/var/lib/jenkins/.local/bin/bandit -r .', returnStdout: true).trim()
+
+                    // Parse Bandit output to check for high severity issues
+                    def highSeverityIssuesFound = banditOutput.contains("High: ")
+
+                    if (highSeverityIssuesFound) {
+                        echo "High severity issues found. Cancelling subsequent stages."
+                        currentBuild.result = 'FAILURE' // Set the build result to FAILURE
+                        error("High severity issues found. Cancelling subsequent stages.")
+                    } else {
+                        echo "No high severity issues found. Proceeding with subsequent stages."
+                    }
+                }
+            }
             }
         }
         stage('Static Code Analysis - Bandit') {
