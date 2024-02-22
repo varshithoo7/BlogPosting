@@ -43,14 +43,15 @@ pipeline {
                     }
                 }
             }
+	}
          stage('Static Code Analysis - Radon') {
             steps {
                 sh '~/.local/bin/radon cc .'
             }
         }
         // Other stages...
-    }
-
+    
+	}
     post {
         failure {
             echo 'Tests Failed'
@@ -59,3 +60,4 @@ pipeline {
 	    echo 'Tests Passed'
     }
 }
+	}
