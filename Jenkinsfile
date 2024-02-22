@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        PATH = "/home/ec2-user/.local/bin"
-    }
-
     stages {
         stage('Install Dependencies') {
             steps {
@@ -18,7 +14,7 @@ pipeline {
         }
         stage('Unit Testing') {
             steps {
-                sh 'pytest'
+                sh '/home/ec2-user/.local/bin/pytest'
             }
         }
         stage('Static Code Analysis - Bandit') {
