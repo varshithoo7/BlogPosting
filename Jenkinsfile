@@ -18,6 +18,7 @@ pipeline {
         }
         stage('Unit Testing') {
             steps {
+		sh 'which pytest'
                 sh 'pytest'
             }
         }
