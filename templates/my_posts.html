@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Posts</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Define a class for the post container */
+        .my-post-container {
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+
+        /* Define a class for the post header */
+        .my-post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        /* Define a class for the edit and delete buttons container */
+        .button-container {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Define a class for the edit and delete buttons */
+        .my-edit-button,
+        .my-delete-button {
+            padding: 10px 20px;
+            margin-left: 10px; /* Add margin between buttons */
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Style for the confirmation dialog overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        /* Style for the confirmation dialog */
+        .confirmation-dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+
+        .my-dialog-yes-button {
+            background-color: #28a745; /* Green color */
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Style the no button */
+        .my-dialog-no-button {
+            background-color: #dc3545; /* Red color */
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My Posts</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('welcome') }}">Home</a></li>
+            <li><a href="{{ url_for('all_posts') }}">All Posts</a></li>
+            <li><a href="{{ url_for('new_post') }}">New Post</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </nav>
+    <main>
+        {% if user_posts %}
+            {% for post in user_posts %}
+                <article class="my-post-container">
+                    <div class="my-post-header">
+                        <h3>{{ post.title }}</h3>
+                        <div class="button-container">
+                            <!-- Edit button -->
+                            <form method="GET" action="{{ url_for('edit_post', post_id=post.id) }}">
+                                <button class="my-edit-button" type="submit">Edit</button>
+                            </form>
+                            <!-- Delete button -->
+                            <form id="delete-post-form" method="POST" action="{{ url_for('delete_post', post_id=post.id) }}">
+                                <button class="my-delete-button" type="button" onclick="return confirmDelete('{{ post.title }}')">Delete</button>
+                            </form>
+                            
+                        </div>
+                    </div>
+                    <p>{{ post.content }}</p>
+                    <p>Posted on: {{ post.date_posted.strftime('%b %d %I:%M %p') }}</p>
+                   
+                    <h4>Comments:</h4>
+                    <ul>
+                        {% for comment in post.comments %}
+                            <div class="comment-container">
+                                <p>{{ comment.content }}</p>
+                                <p>by: {{ comment.first_name }} {{ comment.last_name }}</p>
+                                <p>{{ comment.date_posted.strftime('%b %d %I:%M %p') }}</p>
+                            </div>
+                        {% endfor %}
+                    </ul>
+                </article>
+            {% endfor %}
+        {% else %}
+            <p>No posts found. Please post something.</p>
+        {% endif %}
+    </main>
+    <footer>
+        <p>&copy; 2024 Blog</p>
+    </footer>
+
+    <!-- Confirmation dialog overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Confirmation dialog -->
+    <div class="confirmation-dialog" id="confirmation-dialog">
+        <p id="confirmation-text"></p>
+        <button class="my-dialog-yes-button" onclick="confirmDeleteAction()">Yes</button>
+        <button class="my-dialog-no-button" onclick="cancelDelete()">No</button>
+    </div>
+    <script>
+        var deleteConfirmed = false;
+    
+        function confirmDelete(postTitle) {
+            // Display the overlay and confirmation dialog
+            document.getElementById("overlay").style.display = "block";
+            document.getElementById("confirmation-dialog").style.display = "block";
+    
+            // Set the confirmation text
+            document.getElementById("confirmation-text").innerText = "Do you want to delete the post '" + postTitle + "' permanently?";
+    
+            // Prevent the form from submitting
+            return false;
+        }
+    
+        function cancelDelete() {
+            // Hide the overlay and confirmation dialog
+            document.getElementById("overlay").style.display = "none";
+            document.getElementById("confirmation-dialog").style.display = "none";
+            
+            // Reset the deleteConfirmed flag
+            deleteConfirmed = false;
+        }
+    
+        function confirmDeleteAction() {
+            // Log the confirmation
+            console.log("Delete confirmed");
+            // Hide the overlay and confirmation dialog
+            cancelDelete();
+            
+            // Set the deleteConfirmed flag
+            deleteConfirmed = true;
+            
+            // Check if deletion is confirmed and submit the form
+            if (deleteConfirmed) {
+                document.getElementById("delete-post-form").submit();
+            }
+        }
+    </script>
+    
+</body>
+</html>

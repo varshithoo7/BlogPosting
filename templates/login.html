@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Login</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+        </ul>
+    </nav>
+    <main>
+        <!-- Display the signup success message -->
+        {% if signup_success_message %}
+            <div class="alert alert-success" role="alert">
+                {{ signup_success_message }}
+            </div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('login') }}">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.email.label }} <br>
+                {{ form.email(size=30, class="form-control", style="width: 300px;") }}
+            </div>
+            <div>
+                {{ form.password.label }} <br>
+                {{ form.password(size=30, class="form-control", style="width: 300px;") }}
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100px;">Login</button>
+        </form>
+        {% if current_user %}
+        <div class="welcome-message">Login successful! Welcome, {{ current_user.first_name }} {{ current_user.last_name }}</div>
+        {% endif %}
+    </main>
+    <footer>
+        <p>&copy; 2024 Blog</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Posts</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .comment-form {
+            display: none; /* Hide comment form by default */
+            max-width: 300px; /* Limit comment form width */
+            margin-top: 10px; /* Add some space between posts and comment forms */
+        }
+
+        .comment-toggle {
+            max-width: 100px; /* Limit comment button width */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>All Posts</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('welcome') }}">Home</a></li>
+            <li><a href="{{ url_for('new_post') }}">New Post</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </nav>
+    <main class="main-content">
+        {% for post in all_posts %}
+            <div class="post-container">
+                <h3>{{ post.title }}</h3>
+                <p>{{ post.content }}</p>
+                <p>Posted by: {{ post.first_name }} {{ post.last_name }}</p>
+                <p>Posted on: {{ post.date_posted.strftime('%b %d %I:%M %p') }}</p>
+                <h4>Comments:</h4>
+                {% for comment in post.comments %}
+                    <div class="comment-container">
+                        <p>{{ comment.content }}</p>
+                        <p>by: {{ comment.first_name }} {{ comment.last_name }}</p>
+                        <p>{{ comment.date_posted.strftime('%b %d %I:%M %p') }}</p>
+                    </div>
+                {% endfor %}
+                <!-- Comment button -->
+                <button class="comment-toggle">Comment</button>
+                <!-- Comment form -->
+                <form class="comment-form" method="POST" action="{{ url_for('add_comment', post_id=post.id) }}">
+                    <textarea name="comment_content" rows="3" cols="50" placeholder="Add your comment here"></textarea><br>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        {% endfor %}
+    </main>
+    <footer>
+        <p>&copy; 2024 Blog</p>
+    </footer>
+    <script>
+        // Toggle comment form visibility
+        document.addEventListener('DOMContentLoaded', () => {
+            const commentButtons = document.querySelectorAll('.comment-toggle');
+            commentButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const commentForm = button.nextElementSibling;
+                    commentForm.classList.toggle('comment-form');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

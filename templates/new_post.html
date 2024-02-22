@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Post</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Add custom CSS here */
+        form textarea {
+            height: 200px; /* Adjust the height as needed */
+            resize: vertical; /* Allow vertical resizing */
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .word-counter {
+            font-size: 12px;
+            color: #666;
+            text-align: right;
+        }
+        /* Limit width of title textarea */
+        #title {
+            width: 100%; /* Make it full width */
+            max-width: 400px; /* Limit maximum width */
+            margin-bottom: 10px; /* Add some space below */
+        }
+       /* Style the submit button */
+       button[type="submit"] {
+            padding: 10px 20px; /* Adjust padding */
+            background-color: #4CAF50; /* Green background */
+            border: none; /* Remove border */
+            color: white; /* White text */
+            text-align: center; /* Center text */
+            text-decoration: none; /* Remove underlines */
+            display: inline-block; /* Make it inline */
+            font-size: 16px; /* Set font size */
+            margin-top: 10px; /* Add some space on top */
+            cursor: pointer; /* Add cursor pointer on hover */
+            border-radius: 5px; /* Add some rounded corners */
+            width: 27%; /* Make the button half the width of its container */
+        }
+        /* Change button color on hover */
+        button[type="submit"]:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>New Post</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('welcome') }}">Home</a></li>
+            <li><a href="{{ url_for('all_posts') }}">All Posts</a></li>
+            <li><a href="{{ url_for('my_posts') }}">My Posts</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </nav>
+    <main>
+        <form method="POST" action="{{ url_for('new_post') }}">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <label for="title">Title:</label><br>
+                {{ form.title(cols=50, id='title') }}
+            </div>
+            <div class="form-group">
+                <label for="content">Content:</label><br>
+                <textarea name="content" cols="50" rows="10"></textarea>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 Blog</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const contentTextarea = document.querySelector('#content');
+            const wordCounter = document.querySelector('#word-counter');
+            wordCounter.textContent = 'Words: 0';
+            contentTextarea.addEventListener('input', function () {
+                const content = this.value;
+                const wordCount = content.trim().split(/\s+/).length;
+                wordCounter.textContent = `Words: ${wordCount}`;
+            });
+        });
+    </script>
+</body>
+</html>

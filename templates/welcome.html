@@ -1,0 +1,29 @@
+<!-- welcome.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Welcome {{ user.first_name }} {{ user.last_name }}</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('all_posts') }}">All Posts</a></li>
+            <li><a href="{{ url_for('new_post') }}">New Post</a></li>
+            <li><a href="{{ url_for('my_posts') }}">My Posts</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </nav>
+    <main>
+        <p>Thanks for using our Blog, {{ user.first_name }} {{ user.last_name }}</p>
+    </main>
+    <footer>
+        <p>&copy; 2024 Blog</p>
+    </footer>
+</body>
+</html>
