@@ -9,13 +9,12 @@ pipeline {
         }
         stage('Linting') {
             steps {
-		sh 'which flake8'
                 sh 'flake8 .'
             }
         }
         stage('Unit Testing') {
             steps {
-                sh '/home/ec2-user/.local/bin/pytest'
+                sh 'pytest'
             }
         }
         stage('Static Code Analysis - Bandit') {
@@ -32,12 +31,11 @@ pipeline {
     }
 
     post {
-        success {
-            echo 'Tests Passed'
-        }
         failure {
             echo 'Tests Failed'
         }
+	success {
+	    echo 'Tests Passed'
     }
 }
-
+}
