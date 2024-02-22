@@ -23,6 +23,11 @@ pipeline {
         }
         stage('Unit Testing') {
             steps {
+               sh '~/.local/bin/pytest'
+            }
+        }
+        stage('Static Code Analysis - Bandit') {
+            steps {
                script {
                     def banditOutput = sh(script: '/var/lib/jenkins/.local/bin/bandit -r .', returnStdout: true).trim()
 
@@ -38,11 +43,6 @@ pipeline {
                     }
                 }
             }
-            }
-        }
-        stage('Static Code Analysis - Bandit') {
-            steps {
-                sh '~/.local/bin/bandit -r .'
             }
         }
         stage('Static Code Analysis - Radon') {
