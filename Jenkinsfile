@@ -28,12 +28,12 @@ pipeline {
         }
         stage('Static Code Analysis - Bandit') {
             steps {
-                sh 'bandit -r .'
+                sh '~/.local/bin/bandit -r .'
             }
         }
         stage('Static Code Analysis - Radon') {
             steps {
-                sh 'radon cc .'
+                sh '~/.local/bin/radon cc .'
             }
         }
         // Other stages...
