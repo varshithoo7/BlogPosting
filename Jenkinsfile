@@ -18,7 +18,7 @@ pipeline {
         }
         stage('Unit Testing') {
             steps {
-                sh ' $HOME/.local/bin/pytest'
+                sh '$HOME/.local/bin/pytest'
             }
         }
         stage('Static Code Analysis - Bandit') {
