@@ -7,6 +7,11 @@ pipeline {
                 sh 'pip install -r requirements.txt'
             }
         }
+	stage('Print Environment') {
+ 	   steps {
+        	sh 'printenv'
+   	    }		
+	}
         stage('Linting') {
             steps {
                 sh 'flake8 .'
