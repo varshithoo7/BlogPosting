@@ -61,4 +61,3 @@ pipeline {
 	    echo 'Tests Passed'
     }
 }
-}
