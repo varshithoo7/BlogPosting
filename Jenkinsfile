@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        PATH = "$HOME/.local/bin:$PATH"
+    }
+
     stages {
         stage('Install Dependencies') {
             steps {
@@ -17,17 +21,25 @@ pipeline {
                 sh 'pytest'
             }
         }
-        stage('Static Code Analysis') {
+        stage('Static Code Analysis - Bandit') {
             steps {
                 sh 'bandit -r .'
+            }
+        }
+        stage('Static Code Analysis - Radon') {
+            steps {
                 sh 'radon cc .'
             }
         }
+        // Other stages...
     }
 
     post {
-        always {
+        success {
             echo 'Tests Passed'
+        }
+        failure {
+            echo 'Tests Failed'
         }
     }
 }
