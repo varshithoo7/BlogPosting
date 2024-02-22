@@ -43,9 +43,7 @@ pipeline {
                     }
                 }
             }
-            }
-        }
-        stage('Static Code Analysis - Radon') {
+         stage('Static Code Analysis - Radon') {
             steps {
                 sh '~/.local/bin/radon cc .'
             }
