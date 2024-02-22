@@ -19,7 +19,7 @@ pipeline {
         }
         stage('Unit Testing') {
             steps {
-                sh 'pytest'
+                sh '~/.local/bin/pytest'
             }
         }
         stage('Static Code Analysis - Bandit') {
