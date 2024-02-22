@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        MYSQL_PASSWORD = credentials('MYSQL_PASSWORD')
+    }
 
     stages {
         stage('Install Dependencies') {
