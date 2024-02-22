@@ -3,7 +3,6 @@ import mysql.connector
 
 def create_tables(db):
     cursor = db.cursor()
-    
     try:
         # Check if the database exists
         print("Checking for the Database...")
@@ -24,7 +23,7 @@ def create_tables(db):
         else:
             print("Database Found")
     except mysql.connector.Error as err:
-        print("Error:",err)
+        print("Error:", err)
 
     # Switch to the 'blog_db' database
     cursor.execute("USE blog_db")
