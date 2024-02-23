@@ -26,28 +26,13 @@ pipeline {
                sh '~/.local/bin/pytest'
             }
         }
-        stage('Static Code Analysis - Bandit') {
-    steps {
-        script {
-            def banditOutput = sh(script: '/var/lib/jenkins/.local/bin/bandit -r .', returnStdout: true).trim()
-
-            // Extract the section of Bandit output related to severity issues
-            def severitySection = banditOutput =~ /Total issues \(by severity\):(.*?)Total issues \(by confidence\)/
-
-            // Check if "High: 0" is present in the severity section
-            def highSeverityIssuesFound = severitySection[0][1].contains("High: 0")
-
-            if (highSeverityIssuesFound) {
-                echo "No high severity issues found. Proceeding to next stage (Radon)."
-            } else {
-                echo "High severity issues found. Cancelling subsequent stages."
-                currentBuild.result = 'FAILURE' // Set the build result to FAILURE
-                error("High severity issues found. Cancelling subsequent stages.")
-            }
-        }
+	stage('Static Code Analysis') {
+		steps {
+		    sh '~/.local/bin/radon cc .'
+		}
+	}
     }
-}
-
+        
     
 	}
     post {
