@@ -27,23 +27,25 @@ pipeline {
             }
         }
         stage('Static Code Analysis - Bandit') {
-            steps {
-               script {
-                    def banditOutput = sh(script: '/var/lib/jenkins/.local/bin/bandit -r .', returnStdout: true).trim()
+    steps {
+        script {
+            def banditOutput = sh(script: '/var/lib/jenkins/.local/bin/bandit -r .', returnStdout: true).trim()
 
-                    // Parse Bandit output to check for high severity issues
-                    def highSeverityIssuesFound = banditOutput.contains("High: ")
+            // Extract the section of Bandit output related to severity issues
+            def severitySection = banditOutput =~ /Total issues \(by severity\):(.*?)Total issues \(by confidence\)/s
+            def highSeverityIssuesFound = severitySection[0][1].contains("High: 0")
 
-                    if (highSeverityIssuesFound) {
-                        echo "High severity issues found. Cancelling subsequent stages."
-                        currentBuild.result = 'FAILURE' // Set the build result to FAILURE
-                        error("High severity issues found. Cancelling subsequent stages.")
-                    } else {
-                        echo "No high severity issues found. Proceeding with subsequent stages."
-                    }
-                }
+            if (highSeverityIssuesFound) {
+                echo "No high severity issues found. Proceeding to next stage (Radon)."
+            } else {
+                echo "High severity issues found. Cancelling subsequent stages."
+                currentBuild.result = 'FAILURE' // Set the build result to FAILURE
+                error("High severity issues found. Cancelling subsequent stages.")
             }
-	}
+        }
+    }
+}
+
          stage('Static Code Analysis - Radon') {
             steps {
                 sh '~/.local/bin/radon cc .'
