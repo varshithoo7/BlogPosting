@@ -32,7 +32,9 @@ pipeline {
             def banditOutput = sh(script: '/var/lib/jenkins/.local/bin/bandit -r .', returnStdout: true).trim()
 
             // Extract the section of Bandit output related to severity issues
-            def severitySection = banditOutput =~ /Total issues \(by severity\):(.*?)Total issues \(by confidence\)/s
+            def severitySection = banditOutput =~ /Total issues \(by severity\):(.*?)Total issues \(by confidence\)/
+
+            // Check if "High: 0" is present in the severity section
             def highSeverityIssuesFound = severitySection[0][1].contains("High: 0")
 
             if (highSeverityIssuesFound) {
@@ -45,6 +47,7 @@ pipeline {
         }
     }
 }
+
 
          stage('Static Code Analysis - Radon') {
             steps {
